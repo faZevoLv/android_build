@@ -1,5 +1,8 @@
 #!/bin/bash
 
+export PARENT_DIR=`readlink -f .`
+BUILD_DIR=`readlink -f .`/build/tools/loki
+
 FSTAB=$1
 OUT=$2
 DEVICE=$3
@@ -18,6 +21,9 @@ SYSTEMLINE=`sed -n "${SYSTEMNUMBER}p" $FSTAB`
 systemarray=(${SYSTEMLINE})
 systemtype=${systemarray[1]}
 systemmount=${systemarray[2]}
+
+CL_GRN="\033[32m"
+CL_RST="\033[0m"
 
 rm -r $OUT/*kernel*
 
@@ -45,25 +51,9 @@ mkdir $ZIP_DIR
 UPDATER_DIR=$ZIP_DIR/META-INF/com/google/android
 mkdir -p $UPDATER_DIR
 cp $OUT/obj/EXECUTABLES/updater_intermediates/updater $UPDATER_DIR/update-binary
-echo 'ui_print("Installing Gummy Kernel...");' > $UPDATER_DIR/updater-script
-if [ "$partition_type" = "mtd" ]
-then
-    echo 'package_extract_file("boot.img", "/tmp/boot.img");' >> $UPDATER_DIR/updater-script
-    echo "write_raw_image("'"/tmp/boot.img"'", "'"'$bootpartition'"'");" >> $UPDATER_DIR/updater-script
-elif [ "$partition_type" = "emmc" ]
-then
-    echo "package_extract_file("'"boot.img"'", "'"'$bootpartition'"'");" >> $UPDATER_DIR/updater-script
-elif [ "$partition_type" = "bml" ]
-then
-    echo 'assert(package_extract_file("boot.img", "/tmp/boot.img")' >> $UPDATER_DIR/updater-script
-    echo "       write_raw_image("'"/tmp/boot.img"'", "'"'$bootpartition'"'")" >> $UPDATER_DIR/updater-script
-    echo '       delete("/tmp/boot.img"));' >> $UPDATER_DIR/updater-script
-fi
-echo "mount("'"'$systemtype'"'", "'"EMMC"'", "'"'$systemmount'"'", "'"system"'");" >> $UPDATER_DIR/updater-script
-echo 'package_extract_dir("system", "/system");' >> $UPDATER_DIR/updater-script
-echo 'unmount("/system");' >> $UPDATER_DIR/updater-script
-echo 'ui_print(" ");' >> $UPDATER_DIR/updater-script
-echo 'ui_print("Done!");' >> $UPDATER_DIR/updater-script
+cp $BUILD_DIR/updater-script $UPDATER_DIR/updater-script
+mkdir -p $ZIP_DIR/system/bin
+cp $BUILD_DIR/loki.sh $ZIP_DIR/system/bin/loki.sh
 
 # Copy the kernel and libs
 cp $OUT/boot.img $ZIP_DIR/boot.img
@@ -79,5 +69,6 @@ rm -rf $ZIP_DIR
 #sign package
 java -jar ${ANDROID_HOST_OUT}/framework/signapk.jar ${SOURCE}/build/target/product/security/testkey.x509.pem ${SOURCE}/build/target/product/security/testkey.pk8 $KERNEL_VERSION.zip $KERNEL_VERSION-signed.zip
 rm ./$KERNEL_VERSION.zip
+echo -e ${CL_GRN}"Loki!"${CL_RST}
 md5sum $KERNEL_VERSION-signed.zip
 cd $SOURCE
