@@ -1403,9 +1403,7 @@ else
 endif
 
 ifeq ($(TG_BOOTZIP),)
-    ifeq ($(TARGET_DEVICE),jflteatt)
-        BOOT_ZIP_FROM_IMAGE_SCRIPT := ./build/tools/releasetools/boot_flash_from_image_loki
-    else ifeq ($(TARGET_DEVICE),jfltevzw)
+    ifeq ($(TARGET_DEVICE),jflte)
         BOOT_ZIP_FROM_IMAGE_SCRIPT := ./build/tools/releasetools/boot_flash_from_image_loki
     else
         BOOT_ZIP_FROM_IMAGE_SCRIPT := ./build/tools/releasetools/boot_flash_from_image
