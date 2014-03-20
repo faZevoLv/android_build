@@ -1,4 +1,4 @@
-ui_print("{x}...Installing Gummy Kernel...");
+ui_print("{x}...Installing Liquid Kernel...");
 ui_print("");
 ui_print("{x}...Mounting system...");
 ui_print("");
