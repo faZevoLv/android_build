@@ -41,7 +41,7 @@ then
     VERSION=`echo $KERNELVERSION | cut -d '-' -f2 | cut -d '"' -f1`
     KERNEL_VERSION=$VERSION-kernel
 else
-    KERNEL_VERSION=PoKernel-v1.2-$DEVICE-$(date +"%m-%d-%y")
+    KERNEL_VERSION=PoKernel-v1.3-$DEVICE-$(date +"%m-%d-%y")
 fi
 #rm $OUT/$KERNEL_VERSION
 ZIP_DIR=$OUT/$KERNEL_VERSION
