@@ -41,7 +41,7 @@ then
     VERSION=`echo $KERNELVERSION | cut -d '-' -f2 | cut -d '"' -f1`
     KERNEL_VERSION=$VERSION-kernel
 else
-    KERNEL_VERSION=PoKernel-v2.1-$DEVICE-$(date +"%m-%d-%y")
+    KERNEL_VERSION=PoKernel-v2.2.1-$DEVICE-$(date +"%m-%d-%y")
 fi
 #rm $OUT/$KERNEL_VERSION
 ZIP_DIR=$OUT/$KERNEL_VERSION
@@ -52,13 +52,13 @@ UPDATER_DIR=$ZIP_DIR/META-INF/com/google/android
 mkdir -p $UPDATER_DIR
 cp $OUT/obj/EXECUTABLES/updater_intermediates/updater $UPDATER_DIR/update-binary
 cp $BUILD_DIR/updater-script $UPDATER_DIR/updater-script
-mkdir -p $ZIP_DIR/system/bin
-cp $BUILD_DIR/loki.sh $ZIP_DIR/system/bin/loki.sh
 
 # Copy the kernel and libs
 cp $OUT/boot.img $ZIP_DIR/boot.img
 mkdir -p $ZIP_DIR/system/lib/modules
+mkdir -p $ZIP_DIR/tools
 cp -r $OUT/system/lib/modules/* $ZIP_DIR/system/lib/modules
+cp -r $BUILD_DIR/tools/* $ZIP_DIR/tools
 
 #zip package
 cd $ZIP_DIR
