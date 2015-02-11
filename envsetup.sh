@@ -181,7 +181,7 @@ function setpaths()
     case $ARCH in
         arm)
             # Legacy toolchain configuration used for ARM kernel compilation
-            toolchaindir=arm/arm-eabi-$targetgccversion/bin
+            toolchaindir=arm/arm-eabi-4.9-sm/bin
             if [ -d "$gccprebuiltdir/$toolchaindir" ]; then
                  export ARM_EABI_TOOLCHAIN="$gccprebuiltdir/$toolchaindir"
                  ANDROID_KERNEL_TOOLCHAIN_PATH="$ARM_EABI_TOOLCHAIN":
@@ -650,7 +650,7 @@ function lunch()
         chromium_prebuilt
     else
         # Unset flag in case user opts out later on
-        export PRODUCT_PREBUILT_WEBVIEWCHROMIUM=""
+        export PRODUCT_PREBUILT_WEBVIEWCHROMIUM="yes"
     fi
 
     fixup_common_out_dir
@@ -2299,7 +2299,7 @@ function chromium_prebuilt() {
         export PRODUCT_PREBUILT_WEBVIEWCHROMIUM=yes
         echo "** Prebuilt Chromium is up-to-date; Will be used for build **"
     else
-        export PRODUCT_PREBUILT_WEBVIEWCHROMIUM=no
+        export PRODUCT_PREBUILT_WEBVIEWCHROMIUM=yes
         echo "** Prebuilt Chromium out-of-date/not found; Will build from source **"
     fi
 }
